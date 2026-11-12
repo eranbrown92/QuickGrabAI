@@ -1,35 +1,17 @@
 {
   "manifest_version": 3,
   "name": "QuickGrabAI",
-  "version": "1.0",
-  "description": "Instantly capture and analyze any image with AI - Get quick, accurate insights from screenshots",
+  "version": "1.2.0",
+  "minimum_chrome_version": "116",
+  "description": "Capture a webpage region and analyze it with current OpenAI vision models. Includes local history and text extraction.",
   "permissions": ["activeTab", "scripting", "storage"],
+  "optional_host_permissions": ["https://api.openai.com/*"],
   "action": {
     "default_popup": "popup.html",
-    "default_icon": {
-      "16": "icons/icon16.png",
-      "32": "icons/icon32.png",
-      "48": "icons/icon48.png",
-      "128": "icons/icon128.png"
-    }
+    "default_icon": { "16": "icons/icon16.png", "32": "icons/icon32.png", "48": "icons/icon48.png", "128": "icons/icon128.png" }
   },
-  "icons": {
-    "16": "icons/icon16.png",
-    "32": "icons/icon32.png",
-    "48": "icons/icon48.png",
-    "128": "icons/icon128.png"
-  },
-  "background": {
-    "service_worker": "background.js"
-  },
-  "web_accessible_resources": [
-    {
-      "resources": ["api.js", "selection.js"],
-      "matches": ["<all_urls>"]
-    }
-  ],
+  "icons": { "16": "icons/icon16.png", "32": "icons/icon32.png", "48": "icons/icon48.png", "128": "icons/icon128.png" },
+  "background": { "service_worker": "background.js", "type": "module" },
   "options_page": "options.html",
-  "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'"
-  }
+  "content_security_policy": { "extension_pages": "script-src 'self'; object-src 'none'; connect-src https://api.openai.com; img-src 'self' data:" }
 }

@@ -1,49 +1,20 @@
-# Privacy Practices Documentation for QuickGrabAI
+# QuickGrabAI privacy and permission disclosures · 1.2.0
 
-## Single Purpose Description
+Single purpose: Let a user select a webpage screenshot region and analyze it with OpenAI, with optional local history.
 
-QuickGrabAI is a Chrome extension that enables users to capture screenshots of web pages and analyze them using AI to get instant insights. Users can select specific areas of a webpage to analyze, and view their analysis history in a gallery.
+- `activeTab`: Capture the active tab only after the user clicks Capture.
+- `scripting`: Inject the bundled region-selection script in the clicked tab, in an isolated world. No API keys are passed into the page.
+- `storage`: Keep the API key and preferences locally, cache the API model list, and hold pending cropped images in trusted session storage. IndexedDB stores optional local history.
+- Optional `https://api.openai.com/*`: Requested on a user click (Save key, Refresh models, or Capture) to make authenticated HTTPS requests to `/v1/models` and `/v1/responses`. The extension does not request access to other hosts. Making this optional avoids a new required host permission during an existing-user update.
 
-## Permission Justifications
+Remote code: **No**. Calling an API and displaying its response as plain text is data processing. All executable JavaScript is bundled with the extension. Model IDs are data returned by the API; they do not execute code.
 
-### 1. activeTab Permission
+Data handling to reflect accurately in the Web Store Privacy practices form:
 
-The activeTab permission is required to:
+- Website content: the selected screenshot region is sent to OpenAI for the requested analysis; screenshot/result history can be stored locally.
+- Authentication information: a user-provided API key is stored locally and used only to authenticate with OpenAI.
+- Other personal information may be incidentally present in screenshots selected by the user; the extension does not independently extract browsing history or send page URLs.
+- No developer analytics, ads, sale of user data, or developer-operated processing server.
+- API requests use `store: false`; OpenAI’s service-side retention policies still apply.
 
-- Capture screenshots of the current tab using chrome.tabs.captureVisibleTab()
-- Inject necessary CSS and JavaScript for the image selection interface
-- This permission is essential for the core screenshot functionality and only activates when the user explicitly initiates a capture
-
-### 2. Remote Code Justification
-
-The extension uses remote code execution solely for:
-
-- Communicating with the OpenAI API to analyze captured images
-- This is done securely using user-provided API keys
-- No other remote code is executed; all other functionality uses local extension resources
-
-### 3. Scripting Permission
-
-The scripting permission is required to:
-
-- Inject the image selection interface (selection.js) when users want to capture a specific area
-- Insert CSS styles for the selection overlay and highlighting
-- Execute necessary content scripts for screenshot functionality
-- This permission is fundamental to providing an interactive screenshot selection experience
-
-### 4. Storage Permission
-
-The storage permission is required to:
-
-- Store user's OpenAI API key securely using chrome.storage.sync
-- Save analysis history and results for the gallery feature
-- Maintain user preferences like analysis role settings
-- This permission enables persistent storage of user data and settings across sessions
-
-## Data Usage Compliance
-
-- The extension only captures screenshots when explicitly initiated by the user
-- Screenshots are processed locally and only sent to OpenAI's API for analysis with user consent
-- User's API keys are stored securely using Chrome's storage API
-- No user data is collected or shared with third parties other than OpenAI for image analysis
-- All functionality complies with Chrome Web Store's Developer Program Policies
+These notes describe the implementation, not a guarantee of Web Store approval. Keep the hosted privacy policy and dashboard disclosures consistent with the packaged privacy policy.
